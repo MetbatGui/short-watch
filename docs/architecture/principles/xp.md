@@ -237,6 +237,8 @@ Step 2 (Acceptance test) + Step 3 (Stub) = 1 PR (walking skeleton GREEN).
 - Integration 테스트가 스텁 상태로 GREEN 되도록 test data 를 fake source 로 주입
 - **Migration 은 예외** (Integration 이 실 DB 필요 시 스키마 필수) — 테이블만 생성, Repository 는 여전히 스텁
 
+**Acceptance Test 첫 Green — Fake data로**: Acceptance Test(Red) 작성 직후 첫 Stub Green은 외부 경계(HTTP API 등)를 실제로 호출하지 않고 **Fake 모듈이 고정된 데이터를 반환**하게 해서 통과시킨다. 이 Fake data는 임의로 지어내지 않고, Spike로 실제 확인한 응답(`docs/research/{topic}.md` 또는 `spikes/{topic}/findings.md`)을 그대로 fixture로 박아 쓴다 — 실제 API 모양과 다른 가짜 데이터로 Green 만들면 나중에 진짜로 교체할 때 다시 깨진다.
+
 ---
 
 **각 단계의 검증 기준** (단순 기능 기준):
