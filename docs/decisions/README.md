@@ -12,6 +12,7 @@
 | Date | ADR | Status |
 |------|-----|--------|
 | 2026-09-11 | [collector-separate-container](./2026-09-11-collector-separate-container.md) | Accepted |
+| 2026-09-11 | [raw-data-storage-parquet](./2026-09-11-raw-data-storage-parquet.md) | Accepted |
 
 ---
 
