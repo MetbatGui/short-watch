@@ -174,3 +174,6 @@ poetry.toml
 pyrightconfig.json
 
 # End of https://www.toptal.com/developers/gitignore/api/python
+
+# Spike (임시 학습 코드, 삭제해도 무방한 데이터 — 학습결과는 docs/research/에 별도 기록)
+spikes/
