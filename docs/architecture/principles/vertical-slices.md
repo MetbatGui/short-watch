@@ -52,12 +52,15 @@ Detail 검증 integration test 는 fixture 확보 후 (repository 구현 후).
 ```
 spikes/{topic}/
 ├── approach_1.py
-└── approach_2.py
+├── approach_2.py
+└── findings.md      ← 원시 기록 (실험하면서 바로바로 적음, 정제 안 됨)
 
 (로컬만, Git 커밋 X)
 ```
 
-학습 후 → `docs/research/{topic}.md` (정밀한 학습 문서, 커밋) → ADR/Spec에 반영 → spikes/ 폴더 삭제
+학습 후 → `spikes/{topic}/findings.md`에 원시 기록 → **사용자 승인** → `docs/research/{topic}.md` (정제된 학습 문서, 커밋) → ADR/Spec에 반영 → spikes/ 폴더 삭제
+
+**승인 게이트**: `findings.md`는 실험 중 바로 적는 원시 메모라 정확도/정리 수준이 낮을 수 있다. 사용자 승인 없이 임의로 `docs/research/`에 옮겨적지 않는다 — Spec/Plan 승인([workflow.md](../../workflow.md) 6단계)과 같은 원칙.
 
 **Proper Implementation**:
 ```
