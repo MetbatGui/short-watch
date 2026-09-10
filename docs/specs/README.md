@@ -32,4 +32,4 @@ workflow.md 4단계(Specify). Plan보다 먼저 쓴다.
 
 | Slice | Spec |
 |-------|------|
-| {{slice명}} | [{{slice}}.md](./{{slice}}.md) |
+| futures-collector | [futures-collector.md](./futures-collector.md) |
