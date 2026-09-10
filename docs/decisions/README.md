@@ -11,7 +11,7 @@
 
 | Date | ADR | Status |
 |------|-----|--------|
-| {{YYYY-MM-DD}} | [{{slug}}](./{{YYYY-MM-DD-slug}}.md) | Accepted |
+| 2026-09-11 | [collector-separate-container](./2026-09-11-collector-separate-container.md) | Accepted |
 
 ---
 
