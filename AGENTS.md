@@ -93,6 +93,7 @@ Red-Green-Refactor 실행 방식은 [xp.md § TDD](docs/architecture/principles/
 | ADR (아키텍처 결정 이력) | [docs/decisions/](docs/decisions/) — index: [README](docs/decisions/README.md) |
 | ADR 프로세스 (언제/어떻게 쓰나) | [adr-process.md](docs/adr-process.md) |
 | Spike/조사 결과 참조 | `docs/research/` |
+| 트러블슈팅 기록 (버그/장애 원인·해결 과정) | [docs/troubleshooting/](docs/troubleshooting/) — index: [README](docs/troubleshooting/README.md) |
 | {{프로젝트별 항목 추가}} | {{경로}} |
 
 ---
