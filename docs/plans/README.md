@@ -38,4 +38,4 @@ Inside-Out TDD, Stub 하나씩 교체
 
 | Slice | Plan |
 |-------|------|
-| {{slice명}} | [{{slice}}.md](./{{slice}}.md) |
+| futures-collector | [futures-collector.md](./futures-collector.md) |
