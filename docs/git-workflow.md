@@ -4,6 +4,18 @@
 
 ---
 
+## 계층 구조
+
+```
+Milestone (GitHub 기능, 여러 Slice를 하나의 배포목표로 묶음)
+  └─ Slice (Issue 1개, Spec→Plan→Task)
+       └─ Task (PR 1개, feature 브랜치 1개)
+```
+
+Epic/Release 같은 별도 개념 도입하지 않는다. Milestone은 GitHub 네이티브 기능을 그대로 쓴다.
+
+---
+
 ## 브랜치 전략
 
 ### master (또는 main)
