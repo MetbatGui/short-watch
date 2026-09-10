@@ -104,3 +104,13 @@ modules/{context}/
    repo = SQLAlchemyNewsRepository(db_session)
    service = FetchNewsService(repo)
    ```
+
+---
+
+## CLI Presentation 규약
+
+Presentation 계층은 HTTP API(router)뿐 아니라 **CLI(cron이 실행하는 명령어)도 포함**한다. HTTP의 status code+response body 자리를 CLI에선 다음으로 대신한다.
+
+- **종료 코드(exit code)는 `0`(성공) / `1`(실패) 두 가지만 쓴다.** 그 이상 세분화하지 않는다 — Bash가 `2`를 "쉘 내장명령어 오용"으로 이미 예약해뒀기 때문에 임의로 재사용하면 관례와 충돌한다.
+- **세부 사유는 UseCase 반환값을 그대로 구조화된 JSON으로 출력**해서 구분한다 (`typer.echo(json.dumps(result))`). 성공/실패 모두 `code` 필드(예: `OK_COLLECTED`, `OK_NO_DATA`, `ERR_LOGIN_FAILED`)를 포함한다. exit code는 "성공/실패 대분류"만, `code`는 "왜"를 담당한다 — HTTP의 `status_code`+`detail` 구조와 대응된다.
+- **테스트는 Typer/Click의 `CliRunner`로 인메모리 실행**한다. `result.exit_code`로 대분류를, `json.loads(result.output)["code"]`로 세부 사유를 검증한다. FastAPI `TestClient`의 `response.status_code`+`response.json()`과 대응되는 방식이다.
