@@ -239,6 +239,10 @@ Step 2 (Acceptance test) + Step 3 (Stub) = 1 PR (walking skeleton GREEN).
 
 **Acceptance Test 첫 Green — Fake data로**: Acceptance Test(Red) 작성 직후 첫 Stub Green은 외부 경계(HTTP API 등)를 실제로 호출하지 않고 **Fake 모듈이 고정된 데이터를 반환**하게 해서 통과시킨다. 이 Fake data는 임의로 지어내지 않고, Spike로 실제 확인한 응답(`docs/research/{topic}.md` 또는 `spikes/{topic}/findings.md`)을 그대로 fixture로 박아 쓴다 — 실제 API 모양과 다른 가짜 데이터로 Green 만들면 나중에 진짜로 교체할 때 다시 깨진다.
 
+**Domain도 뼈대만 먼저, 살은 나중**: Repository Port 시그니처가 Domain 타입을 참조하는 경우(예: `save(quotes: list[FutureQuote])`), Walking Skeleton 단계에서 그 Domain 타입은 **빈 껍데기(`class FutureQuote: pass`)로 충분**하다 — 필드조차 아직 선언하지 않는다. Walking Skeleton의 Repository는 Fake(in-memory)라 실제 필드값을 다루지 않으므로, "타입이 존재해서 Port 시그니처가 성립한다"는 조건만 채우면 된다. 필드, 파싱 로직, invariant 검증, 비즈니스 규칙("살")은 전부 이후 Domain 전담 PR에서 Unit Test와 함께 채운다.
+
+이건 Walking Skeleton 패턴 원전 정의 그대로다: "Walking skeleton은 완성본이 아니다. '살(flesh)'이 없다 — 기능이 빠져있고, 그 살은 나중에 점진적으로 채워진다." (Tracer Bullet 패턴도 동일 — Port를 충족시킬 최소 코드만 먼저 연결한다.)
+
 ---
 
 **각 단계의 검증 기준** (단순 기능 기준):
