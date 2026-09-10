@@ -94,6 +94,8 @@ Red-Green-Refactor 실행 방식은 [xp.md § TDD](docs/architecture/principles/
 | ADR 프로세스 (언제/어떻게 쓰나) | [adr-process.md](docs/adr-process.md) |
 | Spike/조사 결과 참조 | `docs/research/` |
 | 트러블슈팅 기록 (버그/장애 원인·해결 과정) | [docs/troubleshooting/](docs/troubleshooting/) — index: [README](docs/troubleshooting/README.md) |
+| Slice Spec (무엇을 만들 것인가) | [docs/specs/](docs/specs/) — index: [README](docs/specs/README.md) |
+| Slice Plan (어떻게 만들 것인가, Task 순서) | [docs/plans/](docs/plans/) — index: [README](docs/plans/README.md) |
 | {{프로젝트별 항목 추가}} | {{경로}} |
 
 ---

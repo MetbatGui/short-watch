@@ -43,12 +43,12 @@
 - ADR은 결정 로그이고, 이후 Spec·Plan은 채택안을 최신 상태로 표현한다.
 - 상세: [adr-process.md](adr-process.md)
 
-### 4. Specify → `spec-{slice}.md`
+### 4. Specify → `docs/specs/{slice}.md`
 
 - 입력/출력 명확히
 - Acceptance Criteria (AC) 정의 (정입력/오류 케이스)
 
-### 5. Plan → `plan-{slice}.md`
+### 5. Plan → `docs/plans/{slice}.md`
 
 - Phase 1: Walking Skeleton (Stub + Integration 테스트, 모든 계층)
 - Phase 2: 실제 구현 (Inside-Out TDD, Stub 하나씩 교체)
