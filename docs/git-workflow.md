@@ -8,11 +8,17 @@
 
 ```
 Milestone (GitHub 기능, 여러 Slice를 하나의 배포목표로 묶음)
-  └─ Slice (Issue 1개, Spec→Plan→Task)
-       └─ Task (PR 1개, feature 브랜치 1개)
+  └─ Slice (메인 Issue, `slice` 라벨, Spec→Plan→Task)
+       └─ Task (서브이슈, `task` 라벨, PR 1개, feature 브랜치 1개)
 ```
 
-Epic/Release 같은 별도 개념 도입하지 않는다. Milestone은 GitHub 네이티브 기능을 그대로 쓴다.
+Epic/Release 같은 별도 개념 도입하지 않는다. Milestone/Sub-issue는 GitHub 네이티브 기능을 그대로 쓴다.
+
+**Slice Issue 생성 시점**: Spec(`docs/specs/{slice}.md`)과 Plan(`docs/plans/{slice}.md`)이 확정되고 사용자 승인을 받은 뒤에만 만든다. 승인 전엔 만들지 않는다 ([workflow.md](workflow.md) 6-7단계).
+
+**Task 서브이슈 완료 처리**: PR 본문에 `Closes #{task 이슈번호}`를 적으면 merge 시 자동으로 닫힌다.
+
+**Slice 메인 이슈 완료 처리**: 모든 Task 서브이슈가 닫히고, 해당 Slice의 Integration Test가 전부 green일 때 **수동으로** 닫는다 (Task 완료와 실제 검증은 다른 조건이라 자동 close 하지 않는다).
 
 ---
 
