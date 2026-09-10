@@ -108,6 +108,14 @@
 
 ---
 
+## GitHub Issue 미러
+
+저장소(markdown 파일)가 SSOT. GitHub Issue는 이를 외부에 노출하는 미러다.
+
+- ADR 파일 생성 시 `adr` 라벨을 단 Issue를 하나 만든다. 본문에는 요약 + 파일 링크만 두고, 전문은 복사하지 않는다.
+- ADR 파일 내용(Status 변경, Superseded 등)이 갱신되면 대응 Issue도 함께 갱신한다.
+- Superseded 시: 원 Issue는 닫고 새 ADR의 Issue를 새로 연다(원 ADR immutable 원칙과 동일).
+
 ## 소급 적용 (기존 ADR)
 
 원칙 도입 이전 결정도 필요시 소급 ADR 작성.
