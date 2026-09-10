@@ -42,12 +42,12 @@
 
 ---
 
-## GitHub Issue 미러
+## GitHub Discussions 미러
 
-저장소(markdown 파일)가 SSOT. GitHub Issue는 이를 외부에 노출하는 미러다.
+저장소(markdown 파일)가 SSOT. GitHub Discussions(Announcements 카테고리)는 이를 외부에 노출하는 미러다. Issue 대신 Discussions를 쓰는 이유는 [adr-process.md § GitHub Discussions 미러](../adr-process.md)와 동일.
 
-- 파일 생성 시 `troubleshooting` 라벨을 단 Issue를 하나 만든다. 본문에는 요약 + 파일 링크만 두고, 전문은 복사하지 않는다.
-- 파일 내용이 갱신되면 대응 Issue도 함께 갱신한다.
+- 파일 생성 시 Announcements 카테고리에 Discussion을 하나 만든다. 본문에는 요약 + 파일 링크만 두고, 전문은 복사하지 않는다.
+- 파일 내용이 갱신되면 대응 Discussion에도 코멘트로 반영한다.
 
 ## 목록
 

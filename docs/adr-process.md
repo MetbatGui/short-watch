@@ -108,13 +108,15 @@
 
 ---
 
-## GitHub Issue 미러
+## GitHub Discussions 미러
 
-저장소(markdown 파일)가 SSOT. GitHub Issue는 이를 외부에 노출하는 미러다.
+저장소(markdown 파일)가 SSOT. GitHub Discussions(Announcements 카테고리)는 이를 외부에 노출하는 미러다.
 
-- ADR 파일 생성 시 `adr` 라벨을 단 Issue를 하나 만든다. 본문에는 요약 + 파일 링크만 두고, 전문은 복사하지 않는다.
-- ADR 파일 내용(Status 변경, Superseded 등)이 갱신되면 대응 Issue도 함께 갱신한다.
-- Superseded 시: 원 Issue는 닫고 새 ADR의 Issue를 새로 연다(원 ADR immutable 원칙과 동일).
+Issue 대신 Discussions를 쓰는 이유: ADR은 "할 일"이 아니라 "이미 내려진 결정"이라 Issue의 open/closed(작업 진행상태) 의미와 맞지 않는다. Discussions는 이 개념 자체가 없어 더 정확하다.
+
+- ADR 파일 생성 시 Announcements 카테고리에 Discussion을 하나 만든다. 본문에는 요약 + 파일 링크만 두고, 전문은 복사하지 않는다.
+- ADR 파일 내용(Status 변경, Superseded 등)이 갱신되면 대응 Discussion에도 코멘트로 반영한다.
+- Superseded 시: 원 Discussion에 "Superseded by {new}" 코멘트 남기고, 새 ADR의 Discussion을 새로 연다(원 ADR immutable 원칙과 동일).
 
 ## 소급 적용 (기존 ADR)
 
