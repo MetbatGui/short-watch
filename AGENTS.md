@@ -88,7 +88,8 @@ Red-Green-Refactor 실행 방식은 [xp.md § TDD](docs/architecture/principles/
 | PR 리뷰 (severity, nit 상한, 저자 응답 형식) | [review-standard.md](docs/review-standard.md) |
 | 개발 플로우 (Spike → Spec → Plan → Tasks → Skeleton → 구현) | [workflow.md](docs/workflow.md) |
 | 새 slice 시작 (Spec/Plan/Task 순서) | [vertical-slices.md](docs/architecture/principles/vertical-slices.md) |
-| TDD 순서 헷갈림 (Red-Green-Refactor, GWT) | [xp.md](docs/architecture/principles/xp.md) |
+| TDD 순서 헷갈림 (Red-Green-Refactor) | [xp.md](docs/architecture/principles/xp.md) |
+| 테스트 어떻게 쓰나 (GWT, 마커, 디렉토리, Classicist/Fake) | [testing.md](docs/architecture/principles/testing.md) |
 | 도메인 계층 애매 (4계층 어디에?) | [ddd.md](docs/architecture/principles/ddd.md) |
 | ADR (아키텍처 결정 이력) | [docs/decisions/](docs/decisions/) — index: [README](docs/decisions/README.md) |
 | ADR 프로세스 (언제/어떻게 쓰나) | [adr-process.md](docs/adr-process.md) |

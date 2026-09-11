@@ -35,25 +35,7 @@ Green : 최소 코드로 테스트 통과
 Refactor : 불필요 복잡도 제거, 설계 개선
 ```
 
-**1인에게 필요한 3가지**:
-
-| 테스트 유형 | 역할 | 서술 예 |
-|-----------|------|--------|
-| Unit (Fake) | 비즈니스 로직 → 빠른 검증 | `test_match_score_above_threshold_returns_true` (`@pytest.mark.unit`) |
-| Integration | 계층 경계 계약 → Slice 완료 기준 | `test_get_news_returns_articles_from_db` (`@pytest.mark.integration`) |
-| Acceptance | Slice 단위 인수 기준 | `test_collect_saves_all_raw_rows_and_reports_ok` (`@pytest.mark.acceptance`) |
-| E2E | 외부 서비스 연동 → 배포 전/주기적 | `test_fetch_rss_and_store_news` (`@pytest.mark.e2e`) |
-
-**테스트 디렉토리 구조 = 도메인/기능 기준, 타입은 마커로 구분**:
-
-```
-tests/
-  future/
-    test_collect_acceptance.py   # @pytest.mark.acceptance
-    test_future_quote.py         # @pytest.mark.unit (나중 Task)
-```
-
-`tests/unit/`, `tests/integration/` 처럼 타입을 상위 폴더로 먼저 쪼개지 않는다 — FastAPI 공식 템플릿(`tests/api/routes/`, `tests/crud/`)등 비슷한 규모 레포도 기능 기준 폴더만 쓰고 타입은 파일명/마커로 구분한다. 타입별 폴더는 도메인 늘어날수록 같은 폴더명이 타입 수만큼 중복되고, "이 도메인 테스트 다 보기"가 여러 폴더에 흩어져서 불편해진다. `pytest -m unit`처럼 마커로 타입별 실행은 그대로 된다.
+**테스트 종류, 마커, 디렉토리 구조, docstring 형식(GWT), Classicist 지향**: [testing.md](testing.md) 참고.
 
 **실무 간극** ("완벽한 TDD"는 불가능):
 
@@ -73,27 +55,7 @@ class MatchingPolicy(BaseModel):
 
 **기준**: "나중에 고칠 것 같은 부분 = 테스트 필요". Spike와 결정 사이에 명확한 commit message로 구분.
 
-**Test 서술 = GWT (Given-When-Then)**:
-
-모든 테스트 (Unit, Integration, Acceptance) docstring 은 GWT 형식.
-
-```python
-def test_get_news_returns_valid_response(client):
-    """GET /news 는 유효한 응답을 반환한다.
-
-    Given: FastAPI test client
-    When: GET /news 호출
-    Then: 200 OK + GetNewsResponse schema 유효
-    """
-    response = client.get("/news")
-    assert response.status_code == 200
-    GetNewsResponse.model_validate(response.json())
-```
-
-**규칙**:
-- **Given 은 명시적** — 암묵적 상태 가정 금지. 필요 시 fixture 로 표현 (`filled_repository`, `empty_repository` 등).
-- Given 서로 충돌하는 테스트 = 다른 fixture 필요.
-- Docstring 첫 줄 = 사용자 관점 한 줄 요약.
+**테스트 docstring(GWT 형식)은 [testing.md § 4](testing.md)**.
 
 **프로덕션 코드 Docstring = Google Style(한국어)**:
 
