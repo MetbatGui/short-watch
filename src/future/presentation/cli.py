@@ -65,8 +65,16 @@ def collect(date_str: str | None = typer.Option(None, "--date")) -> None:
         typer.echo(json.dumps(asdict(result), ensure_ascii=False))
         raise typer.Exit(code=1)
 
-    use_case = build_use_case()
-    result = use_case.execute(target_date)
+    try:
+        use_case = build_use_case()
+        result = use_case.execute(target_date)
+    except (KeyError, RuntimeError) as exc:
+        result = CollectResult(status="error", code="ERR_LOGIN_FAILED", records=0, message=str(exc))
+    except ConnectionError as exc:
+        result = CollectResult(
+            status="error", code="ERR_NETWORK_RETRY_EXHAUSTED", records=0, message=str(exc)
+        )
+
     typer.echo(json.dumps(asdict(result), ensure_ascii=False))
     raise typer.Exit(code=0 if result.status == "ok" else 1)
 
