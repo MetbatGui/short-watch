@@ -49,9 +49,7 @@ assert result == expected_rows           # State Verification: 결과값
 assert len(fake.calls) == 4              # Fake 자신의 상태를 확인 (Mock.call_count 아님)
 ```
 
-### 알려진 부채 (아직 정리 안 됨)
-
-`tests/future/test_krx_futures_client.py`는 현재 `unittest.mock.MagicMock` + `side_effect` + `call_count`로 작성돼있다 — 이 문서 기준으로는 Mockist. 급하게 Risk를 조치하느라 기존 스타일을 따라간 것. 다음에 이 파일 손댈 때 위 `FakeSession` 패턴으로 전환한다.
+`tests/future/test_krx_futures_client.py`가 이 패턴(`FakeSession`/`FakeResponse`, `tests/future/fakes.py`)의 실제 적용 예시다.
 
 ---
 
