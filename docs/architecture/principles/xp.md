@@ -83,6 +83,27 @@ def test_get_news_returns_valid_response(client):
 - Given 서로 충돌하는 테스트 = 다른 fixture 필요.
 - Docstring 첫 줄 = 사용자 관점 한 줄 요약.
 
+**프로덕션 코드 Docstring = Google Style(한국어)**:
+
+Args/Returns/Raises 섹션 이름은 영어 그대로(도구 파싱 호환), 내용은 한국어. 타입힌트로 이미 드러나는 정보는 반복하지 않는다 — 타입으론 안 보이는 것(휴장일 처리 같은 반환값의 의미, 예외 발생 조건, 부수효과)만 채운다. 반복할 내용이 없으면 한 줄 요약만 쓰거나(review-standard.md상 docstring 자체는 🔵 nit, 저자 재량) 아예 생략해도 된다.
+
+```python
+# 반복할 정보 없음 - 한 줄로 충분
+def fetch_raw(self, target_date: date) -> list[dict]:
+    """지정 거래일의 원본 응답 행 전체를 반환한다. 가공 없음(Bronze)."""
+
+# 예외/반환값 의미처럼 타입으로 안 보이는 정보 있음 - 섹션 채움
+def fetch_raw(self, target_date: date) -> list[dict]:
+    """지정 거래일의 원본 응답 행 전체를 반환한다. 가공 없음(Bronze).
+
+    Returns:
+        휴장일 등 데이터 없으면 빈 리스트(예외 아님).
+
+    Raises:
+        RuntimeError: 로그인 실패 시 즉시 발생(재시도 안 함).
+    """
+```
+
 ### 2.2 Simple Design — Ponytail 정신
 
 **원칙**: 지금 필요한 것만. 투기적 추상화 금지.
