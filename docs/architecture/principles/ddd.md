@@ -47,6 +47,8 @@
 
 **의존성 규칙:** Domain ← Application ← (Presentation, Infrastructure)
 
+**예외 — 수집기(Collector) Slice는 Domain 계층 생략 가능**: 원본 데이터를 판단 없이 그대로 저장하는 Bronze 수집기는 파싱/검증할 게 없어 Domain 모델이 불필요할 수 있다. 근거: [collector-bronze-no-transformation ADR](../../decisions/2026-09-12-collector-bronze-no-transformation.md).
+
 - Domain: 외부 의존 없음 (표준 라이브러리만)
 - Application: Domain만 import
 - Presentation/Infrastructure: Domain, Application import 가능
