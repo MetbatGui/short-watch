@@ -1,6 +1,6 @@
 # PR Review 표준
 
-> Caveman-style 리뷰. 얇은 PR / CI 정합 지향.
+> Independent-style 리뷰. 얇은 PR / CI 정합 지향.
 
 ---
 
@@ -8,7 +8,7 @@
 
 ### 구조
 ```markdown
-# Caveman Review
+# Independent Review
 
 **Overall**: (1줄 요약, blocker 유무)
 
@@ -53,7 +53,7 @@
 모든 독립 리뷰는 아래 구조를 **생략 없이** 사용한다. 해당 finding이 없으면 `없음`이라고 쓴다.
 
 ```markdown
-# Caveman Review
+# Independent Review
 
 **Overall**: 병합 가능 여부와 가장 중요한 위험을 한 문장으로 요약한다.
 
@@ -120,7 +120,7 @@
 - 🟡/❓ = 사용자 **명시적 결정 필수** (accept/defer/fix). 정의 자체가 결정을 요구한다
 - 결정 전에는 해당 결정을 전제한 코드를 변경하지 않는다
 - Defer = 후속 PR/이슈 명시
-- 자동 수정분은 `# Caveman Review 조치` 댓글에 조치·검증 결과 기록
+- 자동 수정분은 `# Independent Review 조치` 댓글에 조치·검증 결과 기록
 
 **왜 이렇게 나누나**: 처리 주체를 severity 와 독립적으로 정하면 두 체계가 각자 표류한다("평시엔 자동, 위험하면 사람" 같은 상황별 예외는 재현 불가능한 규칙이 된다). severity 정의에서 처리 주체를 그대로 도출하면 규칙이 하나로 줄고, 판정이 곧 처리 방식이 된다.
 
@@ -138,7 +138,7 @@
 
 ### 🔴 Bugs & 🔵 Nits
 
-자동 수정 완료. 조치 내용은 `# Caveman Review 조치` 참고.
+자동 수정 완료. 조치 내용은 `# Independent Review 조치` 참고.
 ```
 
 ---
