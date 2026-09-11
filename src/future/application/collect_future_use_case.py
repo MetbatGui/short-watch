@@ -13,15 +13,6 @@ class CollectResult:
     records: int
     message: str = ""
 
-    def to_dict(self) -> dict:
-        """CLI 출력용 JSON 직렬화 형태로 변환한다."""
-        return {
-            "status": self.status,
-            "code": self.code,
-            "records": self.records,
-            "message": self.message,
-        }
-
 
 class CollectFutureUseCase:
     """선물 원본 데이터를 가져와 저장까지 조율하는 유스케이스."""

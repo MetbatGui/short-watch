@@ -1,10 +1,11 @@
 import json
+from dataclasses import asdict
 from datetime import date, datetime
 from zoneinfo import ZoneInfo
 
 import typer
 
-from future.application.collect_future_use_case import CollectFutureUseCase
+from future.application.collect_future_use_case import CollectFutureUseCase, CollectResult
 
 app = typer.Typer()
 
@@ -23,6 +24,9 @@ def _parse_target_date(date_str: str | None) -> date:
 
     Args:
         date_str: ``YYYYMMDD`` 형식 문자열. None이면 KST 기준 오늘을 쓴다.
+
+    Raises:
+        ValueError: date_str이 ``YYYYMMDD`` 형식이 아니면 발생한다.
     """
     if date_str is None:
         return datetime.now(ZoneInfo("Asia/Seoul")).date()
@@ -30,19 +34,25 @@ def _parse_target_date(date_str: str | None) -> date:
 
 
 @app.command()
-def collect(date: str | None = typer.Option(None, "--date")) -> None:
+def collect(date_str: str | None = typer.Option(None, "--date")) -> None:
     """선물 원본 데이터를 수집해 저장하고 결과를 JSON으로 출력한다.
 
     Args:
-        date: 대상 거래일(``YYYYMMDD``). 생략하면 KST 기준 오늘.
+        date_str: 대상 거래일(``YYYYMMDD``). 생략하면 KST 기준 오늘.
 
     성공/실패와 무관하게 결과 JSON을 stdout에 출력하고, 종료코드는
     성공 0 / 실패 1만 쓴다(ddd.md "CLI Presentation 규약").
     """
-    target_date = _parse_target_date(date)
+    try:
+        target_date = _parse_target_date(date_str)
+    except ValueError:
+        result = CollectResult(status="error", code="ERR_INVALID_DATE", records=0, message="--date 형식이 YYYYMMDD가 아님")
+        typer.echo(json.dumps(asdict(result), ensure_ascii=False))
+        raise typer.Exit(code=1)
+
     use_case = build_use_case()
     result = use_case.execute(target_date)
-    typer.echo(json.dumps(result.to_dict(), ensure_ascii=False))
+    typer.echo(json.dumps(asdict(result), ensure_ascii=False))
     raise typer.Exit(code=0 if result.status == "ok" else 1)
 
 

@@ -94,3 +94,19 @@ def test_collect_reports_no_data_when_source_returns_empty(monkeypatch):
     assert payload["code"] == "OK_NO_DATA"
     assert payload["records"] == 0
     assert fake_repo.saved is None
+
+
+@pytest.mark.acceptance
+def test_collect_reports_error_when_date_format_invalid():
+    """--date 형식이 잘못되면 트레이스백 대신 구조화된 에러를 출력한다.
+
+    Given: 존재하지 않는 --date 값
+    When: CLI `collect --date not-a-date` 실행
+    Then: exit 1, JSON code=ERR_INVALID_DATE
+    """
+    runner = CliRunner()
+    result = runner.invoke(cli.app, ["--date", "not-a-date"])
+
+    assert result.exit_code == 1
+    payload = json.loads(result.output)
+    assert payload["code"] == "ERR_INVALID_DATE"
