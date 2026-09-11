@@ -63,21 +63,22 @@ class KrxFuturesClient:
             "mbrId": self._username,
             "pw": self._password,
         }
-        resp = self._session.post(login_url, data=payload, headers={"Referer": login_page}, timeout=15)
-        data = resp.json()
-        error_code = data.get("_error_code", "")
+        error_code = self._post_login(login_url, login_page, payload)
 
+        # CD011 = 동일 계정 중복 로그인. skipDup=Y로 재요청하면 기존 세션을 밀어내고 로그인된다.
         if error_code == "CD011":
             payload["skipDup"] = "Y"
-            resp = self._session.post(login_url, data=payload, headers={"Referer": login_page}, timeout=15)
-            data = resp.json()
-            error_code = data.get("_error_code", "")
+            error_code = self._post_login(login_url, login_page, payload)
 
         if error_code != "CD001":
             raise RuntimeError(f"KRX 로그인 실패: {error_code}")
 
         self._session.cookies.set("mdc.client_session", "true", domain="data.krx.co.kr")
         self._session.cookies.set("lang", "ko_KR", domain="data.krx.co.kr")
+
+    def _post_login(self, login_url: str, login_page: str, payload: dict) -> str:
+        resp = self._session.post(login_url, data=payload, headers={"Referer": login_page}, timeout=15)
+        return resp.json().get("_error_code", "")
 
     def _fetch(self, target_date: date) -> list[dict]:
         trd_dd = target_date.strftime("%Y%m%d")
