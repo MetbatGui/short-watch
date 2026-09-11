@@ -6,4 +6,20 @@ readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
     "requests>=2.34.2",
+    "typer>=0.27.2",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=9.1.1",
+]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
+markers = [
+    "unit: 빠른 단위 테스트 (Fake 기반)",
+    "integration: 계층 경계 계약 검증",
+    "acceptance: Slice 단위 인수 테스트",
+    "e2e: 실제 외부 서비스 연동",
 ]

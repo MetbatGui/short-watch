@@ -39,9 +39,21 @@ Refactor : 불필요 복잡도 제거, 설계 개선
 
 | 테스트 유형 | 역할 | 서술 예 |
 |-----------|------|--------|
-| Unit (Fake) | 비즈니스 로직 → 빠른 검증 | `test_match_score_above_threshold_returns_true` |
-| Integration | 계층 경계 계약 → Slice 완료 기준 | `test_get_news_returns_articles_from_db` |
+| Unit (Fake) | 비즈니스 로직 → 빠른 검증 | `test_match_score_above_threshold_returns_true` (`@pytest.mark.unit`) |
+| Integration | 계층 경계 계약 → Slice 완료 기준 | `test_get_news_returns_articles_from_db` (`@pytest.mark.integration`) |
+| Acceptance | Slice 단위 인수 기준 | `test_collect_saves_all_raw_rows_and_reports_ok` (`@pytest.mark.acceptance`) |
 | E2E | 외부 서비스 연동 → 배포 전/주기적 | `test_fetch_rss_and_store_news` (`@pytest.mark.e2e`) |
+
+**테스트 디렉토리 구조 = 도메인/기능 기준, 타입은 마커로 구분**:
+
+```
+tests/
+  future/
+    test_collect_acceptance.py   # @pytest.mark.acceptance
+    test_future_quote.py         # @pytest.mark.unit (나중 Task)
+```
+
+`tests/unit/`, `tests/integration/` 처럼 타입을 상위 폴더로 먼저 쪼개지 않는다 — FastAPI 공식 템플릿(`tests/api/routes/`, `tests/crud/`)등 비슷한 규모 레포도 기능 기준 폴더만 쓰고 타입은 파일명/마커로 구분한다. 타입별 폴더는 도메인 늘어날수록 같은 폴더명이 타입 수만큼 중복되고, "이 도메인 테스트 다 보기"가 여러 폴더에 흩어져서 불편해진다. `pytest -m unit`처럼 마커로 타입별 실행은 그대로 된다.
 
 **실무 간극** ("완벽한 TDD"는 불가능):
 
