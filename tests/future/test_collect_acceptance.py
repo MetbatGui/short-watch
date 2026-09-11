@@ -110,3 +110,77 @@ def test_collect_reports_error_when_date_format_invalid():
     assert result.exit_code == 1
     payload = json.loads(result.output)
     assert payload["code"] == "ERR_INVALID_DATE"
+
+
+@pytest.mark.acceptance
+def test_collect_reports_login_failed_when_credentials_missing(monkeypatch):
+    """KRX 자격증명 환경변수가 없으면 트레이스백 대신 로그인 실패로 처리한다.
+
+    Given: build_use_case()가 KeyError(환경변수 누락)를 던짐
+    When: CLI `collect --date 20260911` 실행
+    Then: exit 1, JSON code=ERR_LOGIN_FAILED
+    """
+
+    def raise_missing_env():
+        raise KeyError("KRX_USERNAME")
+
+    monkeypatch.setattr(cli, "build_use_case", raise_missing_env)
+
+    runner = CliRunner()
+    result = runner.invoke(cli.app, ["--date", "20260911"])
+
+    assert result.exit_code == 1
+    payload = json.loads(result.output)
+    assert payload["code"] == "ERR_LOGIN_FAILED"
+
+
+@pytest.mark.acceptance
+def test_collect_reports_login_failed_when_source_raises_runtime_error(monkeypatch):
+    """소스가 로그인 실패(RuntimeError)를 던지면 트레이스백 대신 구조화된 에러를 출력한다.
+
+    Given: Fake 소스가 fetch_raw에서 RuntimeError(로그인 실패)를 던짐
+    When: CLI `collect --date 20260911` 실행
+    Then: exit 1, JSON code=ERR_LOGIN_FAILED
+    """
+
+    class LoginFailingSource:
+        def fetch_raw(self, target_date: date) -> list[dict]:
+            raise RuntimeError("KRX 로그인 실패: CD999")
+
+    fake_repo = FakeFutureRawRepository()
+    monkeypatch.setattr(
+        cli, "build_use_case", lambda: CollectFutureUseCase(LoginFailingSource(), fake_repo)
+    )
+
+    runner = CliRunner()
+    result = runner.invoke(cli.app, ["--date", "20260911"])
+
+    assert result.exit_code == 1
+    payload = json.loads(result.output)
+    assert payload["code"] == "ERR_LOGIN_FAILED"
+
+
+@pytest.mark.acceptance
+def test_collect_reports_network_retry_exhausted_when_source_raises_connection_error(monkeypatch):
+    """소스가 재시도 소진(ConnectionError)을 던지면 트레이스백 대신 구조화된 에러를 출력한다.
+
+    Given: Fake 소스가 fetch_raw에서 ConnectionError(재시도 소진)를 던짐
+    When: CLI `collect --date 20260911` 실행
+    Then: exit 1, JSON code=ERR_NETWORK_RETRY_EXHAUSTED
+    """
+
+    class NetworkFailingSource:
+        def fetch_raw(self, target_date: date) -> list[dict]:
+            raise ConnectionError("KRX 요청 실패: network down")
+
+    fake_repo = FakeFutureRawRepository()
+    monkeypatch.setattr(
+        cli, "build_use_case", lambda: CollectFutureUseCase(NetworkFailingSource(), fake_repo)
+    )
+
+    runner = CliRunner()
+    result = runner.invoke(cli.app, ["--date", "20260911"])
+
+    assert result.exit_code == 1
+    payload = json.loads(result.output)
+    assert payload["code"] == "ERR_NETWORK_RETRY_EXHAUSTED"
