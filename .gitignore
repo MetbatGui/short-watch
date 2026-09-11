@@ -177,3 +177,6 @@ pyrightconfig.json
 
 # Spike (임시 학습 코드, 삭제해도 무방한 데이터 — 학습결과는 docs/research/에 별도 기록)
 spikes/
+
+# Collector 원본 데이터 (Bronze, 로컬/실행 환경별 산출물)
+data/

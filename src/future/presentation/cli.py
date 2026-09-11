@@ -1,22 +1,37 @@
 import json
+import os
 from dataclasses import asdict
 from datetime import date, datetime
+from pathlib import Path
 from zoneinfo import ZoneInfo
 
 import typer
 
 from future.application.collect_future_use_case import CollectFutureUseCase, CollectResult
+from future.infrastructure.adapters.future_raw_parquet_repository import (
+    FutureRawParquetRepository,
+)
+from future.infrastructure.adapters.krx_futures_client import KrxFuturesClient
 
 app = typer.Typer()
+
+DEFAULT_RAW_DATA_PATH = "data/future/raw"
 
 
 def build_use_case() -> CollectFutureUseCase:
     """실제 의존성(KrxFuturesClient, FutureRawParquetRepository)으로 유스케이스를 조립한다.
 
-    Raises:
-        NotImplementedError: Wire-up(Task #10) 전까지는 항상 발생한다.
+    환경변수 KRX_USERNAME/KRX_PASSWORD로 로그인하고, FUTURE_RAW_DATA_PATH
+    (미설정 시 "data/future/raw")에 원본 데이터를 저장한다.
     """
-    raise NotImplementedError("Wire-up 전 - Task #10에서 실제 구현으로 교체")
+    source = KrxFuturesClient(
+        username=os.environ["KRX_USERNAME"],
+        password=os.environ["KRX_PASSWORD"],
+    )
+    repo = FutureRawParquetRepository(
+        base_path=Path(os.environ.get("FUTURE_RAW_DATA_PATH", DEFAULT_RAW_DATA_PATH))
+    )
+    return CollectFutureUseCase(source=source, repo=repo)
 
 
 def _parse_target_date(date_str: str | None) -> date:
@@ -50,8 +65,16 @@ def collect(date_str: str | None = typer.Option(None, "--date")) -> None:
         typer.echo(json.dumps(asdict(result), ensure_ascii=False))
         raise typer.Exit(code=1)
 
-    use_case = build_use_case()
-    result = use_case.execute(target_date)
+    try:
+        use_case = build_use_case()
+        result = use_case.execute(target_date)
+    except (KeyError, RuntimeError) as exc:
+        result = CollectResult(status="error", code="ERR_LOGIN_FAILED", records=0, message=str(exc))
+    except ConnectionError as exc:
+        result = CollectResult(
+            status="error", code="ERR_NETWORK_RETRY_EXHAUSTED", records=0, message=str(exc)
+        )
+
     typer.echo(json.dumps(asdict(result), ensure_ascii=False))
     raise typer.Exit(code=0 if result.status == "ok" else 1)
 
