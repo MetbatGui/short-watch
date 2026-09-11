@@ -52,8 +52,8 @@ class KrxFuturesClient:
         login_jsp = f"{BASE_URL}/contents/MDC/COMS/client/view/login.jsp?site=mdc"
         login_url = f"{BASE_URL}/contents/MDC/COMS/client/MDCCOMS001D1.cmd"
 
-        self._session.get(login_page, timeout=15)
-        self._session.get(login_jsp, headers={"Referer": login_page}, timeout=15)
+        self._with_retry(lambda: self._session.get(login_page, timeout=15))
+        self._with_retry(lambda: self._session.get(login_jsp, headers={"Referer": login_page}, timeout=15))
 
         payload = {
             "mbrNm": "",
@@ -77,8 +77,10 @@ class KrxFuturesClient:
         self._session.cookies.set("lang", "ko_KR", domain="data.krx.co.kr")
 
     def _post_login(self, login_url: str, login_page: str, payload: dict) -> str:
-        resp = self._session.post(login_url, data=payload, headers={"Referer": login_page}, timeout=15)
-        return resp.json().get("_error_code", "")
+        data = self._with_retry(
+            lambda: self._session.post(login_url, data=payload, headers={"Referer": login_page}, timeout=15).json()
+        )
+        return data.get("_error_code", "")
 
     def _fetch(self, target_date: date) -> list[dict]:
         trd_dd = target_date.strftime("%Y%m%d")
@@ -103,14 +105,18 @@ class KrxFuturesClient:
             "X-Requested-With": "XMLHttpRequest",
         }
 
+        data = self._with_retry(lambda: self._session.post(url, data=params, headers=headers, timeout=15).json())
+        return data.get("output", [])
+
+    def _with_retry(self, request_fn: Callable[[], object]) -> object:
+        """request_fn을 실행하고, 네트워크 오류나 JSON 파싱 실패(세션 만료 등) 시 지수백오프로 재시도한다."""
         last_error: Exception | None = None
         for attempt in range(self._max_retries):
             try:
-                resp = self._session.post(url, data=params, headers=headers, timeout=15)
-                return resp.json().get("output", [])
-            except requests.exceptions.RequestException as exc:
+                return request_fn()
+            except (requests.exceptions.RequestException, ValueError) as exc:
                 last_error = exc
                 if attempt < self._max_retries - 1:
                     self._sleep(2**attempt)
 
-        raise ConnectionError(f"KRX 선물 데이터 조회 실패: {last_error}") from last_error
+        raise ConnectionError(f"KRX 요청 실패: {last_error}") from last_error
