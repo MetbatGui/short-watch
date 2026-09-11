@@ -53,4 +53,4 @@
 
 | Date | 제목 | 요약 |
 |------|------|------|
-| {{YYYY-MM-DD}} | [{{slug}}](./{{YYYY-MM-DD-slug}}.md) | {{한줄요약}} |
+| 2026-09-11 | [test-dir-name-collides-with-package](./2026-09-11-test-dir-name-collides-with-package.md) | 테스트 디렉토리에 `__init__.py` 두면 소스 패키지명과 겹칠 때 import 충돌 |
