@@ -19,6 +19,13 @@ def _data_response(output: list[dict]):
     return resp
 
 
+def _malformed_json_response():
+    """세션 만료 등으로 HTML이 와서 .json()이 JSONDecodeError를 던지는 응답."""
+    resp = MagicMock()
+    resp.json.side_effect = ValueError("Expecting value: line 1 column 1 (char 0)")
+    return resp
+
+
 @pytest.mark.unit
 def test_fetch_raw_returns_output_verbatim():
     """정상 응답의 output 배열을 가공 없이 그대로 반환한다.
@@ -101,3 +108,51 @@ def test_fetch_raw_retries_three_times_on_network_error_then_raises():
 
     assert session.post.call_count == 1 + 3  # 로그인 1 + getJsonData 3회 시도
     assert len(sleep_calls) == 2  # 3회 시도 중 마지막 실패 후엔 대기 안 함
+
+
+@pytest.mark.unit
+def test_fetch_raw_retries_on_malformed_json_response():
+    """세션 만료 등으로 JSON 파싱이 실패해도 네트워크 오류와 동일하게 재시도한다.
+
+    Given: 로그인 성공 + getJsonData 응답이 3회 연속 JSON 파싱 실패(HTML 응답 등)
+    When: fetch_raw(target_date) 호출
+    Then: ConnectionError 발생 (RequestException뿐 아니라 JSON 파싱 실패도 재시도 대상)
+    """
+    session = MagicMock()
+    session.post.side_effect = [
+        _login_success_response(),
+        _malformed_json_response(),
+        _malformed_json_response(),
+        _malformed_json_response(),
+    ]
+
+    client = KrxFuturesClient(username="u", password="p", session=session, sleep=lambda s: None)
+
+    with pytest.raises(ConnectionError):
+        client.fetch_raw(date(2026, 9, 11))
+
+    assert session.post.call_count == 1 + 3
+
+
+@pytest.mark.unit
+def test_fetch_raw_raises_connection_error_when_login_network_fails():
+    """로그인 단계 네트워크 오류도 raw 예외가 아니라 ConnectionError로 통일해서 던진다.
+
+    Given: 로그인 첫 GET 호출이 3회 연속 네트워크 오류
+    When: fetch_raw(target_date) 호출
+    Then: ConnectionError 발생 (requests.exceptions.ConnectionError가 그대로 새어나가지 않음),
+          getJsonData 쪽은 아예 호출되지 않음
+    """
+    session = MagicMock()
+    session.get.side_effect = [
+        requests.exceptions.ConnectionError("network down"),
+        requests.exceptions.ConnectionError("network down"),
+        requests.exceptions.ConnectionError("network down"),
+    ]
+
+    client = KrxFuturesClient(username="u", password="p", session=session, sleep=lambda s: None)
+
+    with pytest.raises(ConnectionError):
+        client.fetch_raw(date(2026, 9, 11))
+
+    assert session.post.call_count == 0
