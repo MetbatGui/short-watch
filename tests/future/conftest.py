@@ -32,16 +32,19 @@ def sample_rows() -> list[dict]:
 
 @pytest.fixture
 def login_success_response() -> FakeResponse:
+    """KRX 로그인 성공 응답(_error_code=CD001)."""
     return FakeResponse(data={"_error_code": "CD001", "MBR_NO": "1000005836"})
 
 
 @pytest.fixture
 def login_failure_response() -> FakeResponse:
+    """KRX 로그인 실패 응답(CD001/CD011이 아닌 임의의 에러코드)."""
     return FakeResponse(data={"_error_code": "CD999"})
 
 
 @pytest.fixture
 def no_op_sleep():
+    """재시도 대기를 실제로 하지 않는 sleep 대역. 테스트를 느리게 만들지 않는다."""
     return lambda seconds: None
 
 

@@ -41,7 +41,13 @@ class FakeSession:
         return self._next()
 
     def _next(self) -> FakeResponse:
-        item = next(self._queue)
+        try:
+            item = next(self._queue)
+        except StopIteration:
+            raise AssertionError(
+                f"FakeSession 큐가 소진됨 (호출 {len(self.calls)}회: {self.calls}). "
+                "테스트에 넘긴 큐 항목 개수를 확인해라."
+            ) from None
         if isinstance(item, Exception):
             raise item
         return item
