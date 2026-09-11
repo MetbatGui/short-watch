@@ -1,6 +1,7 @@
 import json
 from datetime import date
 
+import pytest
 from typer.testing import CliRunner
 
 from future.application.collect_future_use_case import CollectFutureUseCase
@@ -44,6 +45,7 @@ class FakeFutureRawRepository:
         self.saved = (target_date, rows)
 
 
+@pytest.mark.acceptance
 def test_collect_saves_all_raw_rows_and_reports_ok(monkeypatch):
     """CLI collect 실행 시 원본 행 전부를 가공 없이 저장하고 성공을 보고한다.
 
@@ -66,6 +68,7 @@ def test_collect_saves_all_raw_rows_and_reports_ok(monkeypatch):
     assert fake_repo.saved == (date(2026, 9, 11), FIXTURE_ROWS)
 
 
+@pytest.mark.acceptance
 def test_collect_reports_no_data_when_source_returns_empty(monkeypatch):
     """휴장일 등 원본 응답이 비어있으면 실패가 아니라 정상 종료로 처리한다.
 
